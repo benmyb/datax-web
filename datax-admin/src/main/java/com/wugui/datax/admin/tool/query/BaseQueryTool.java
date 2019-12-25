@@ -1,6 +1,7 @@
 package com.wugui.datax.admin.tool.query;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -67,7 +68,11 @@ public abstract class BaseQueryTool implements QueryToolInterface {
             dataSource.setConnectionTimeout(30000);
             dataSource.setConnectionTestQuery("SELECT 1");
             //设为只读
-            dataSource.setReadOnly(true);
+            String dbType = JdbcUtils.getDbType(jobJdbcDatasource.getJdbcUrl(), jobJdbcDatasource.getJdbcDriverClass());
+            //hive jdbc does not support read only
+            if (!JdbcConstants.HIVE.equals(dbType)) {
+                dataSource.setReadOnly(true);
+            }
             this.datasource = dataSource;
             this.connection = this.datasource.getConnection();
         }else{

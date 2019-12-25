@@ -6,14 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.wugui.datax.admin.entity.JobJdbcDatasource;
-import com.wugui.datax.admin.tool.datax.reader.MysqlReader;
-import com.wugui.datax.admin.tool.datax.reader.OracleReader;
-import com.wugui.datax.admin.tool.datax.reader.PostgresqlReader;
-import com.wugui.datax.admin.tool.datax.reader.SqlServerReader;
-import com.wugui.datax.admin.tool.datax.writer.MysqlWriter;
-import com.wugui.datax.admin.tool.datax.writer.OraclelWriter;
-import com.wugui.datax.admin.tool.datax.writer.PostgresqllWriter;
-import com.wugui.datax.admin.tool.datax.writer.SqlServerlWriter;
+import com.wugui.datax.admin.tool.datax.reader.*;
+import com.wugui.datax.admin.tool.datax.writer.*;
 import com.wugui.datax.admin.tool.pojo.DataxPluginPojo;
 
 import java.util.List;
@@ -86,6 +80,8 @@ public class DataxJsonHelper implements DataxJsonInterface {
             readerPlugin = new SqlServerReader();
         } else if (JdbcConstants.POSTGRESQL.equals(readerDbType)) {
             readerPlugin = new PostgresqlReader();
+        } else if (JdbcConstants.HIVE.equals(readerDbType)) {
+            readerPlugin = new HiveReader();
         }
         readerPlugin.setExtraParams(extraParams);
     }
@@ -104,6 +100,8 @@ public class DataxJsonHelper implements DataxJsonInterface {
             writerPlugin = new SqlServerlWriter();
         } else if (JdbcConstants.POSTGRESQL.equals(writerDbType)) {
             writerPlugin = new PostgresqllWriter();
+        } else if (JdbcConstants.HIVE.equals(writerDbType)) {
+            writerPlugin = new HiveWriter();
         }
     }
 

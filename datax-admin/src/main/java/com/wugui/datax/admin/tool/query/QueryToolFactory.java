@@ -27,6 +27,8 @@ public class QueryToolFactory {
             return getPostgresqlQueryToolInstance(jobJdbcDatasource);
         } else if (JdbcConstants.SQL_SERVER.equals(dbType)) {
             return getSqlserverQueryToolInstance(jobJdbcDatasource);
+        } else if (JdbcConstants.HIVE.equals(dbType)) {
+            return getHiveQueryToolInstance(jobJdbcDatasource);
         }
         throw new UnsupportedOperationException("找不到该类型: ".concat(dbType));
     }
@@ -63,6 +65,15 @@ public class QueryToolFactory {
             return new SqlServerQueryTool(jdbcDatasource);
         } catch (SQLException e) {
             throw RdbmsException.asConnException(JdbcConstants.SQL_SERVER,
+                    e,jdbcDatasource.getJdbcUsername(),jdbcDatasource.getDatasourceName());
+        }
+    }
+
+    private static BaseQueryTool getHiveQueryToolInstance(JobJdbcDatasource jdbcDatasource) {
+        try {
+            return new HiveQueryTool(jdbcDatasource);
+        } catch (SQLException e) {
+            throw RdbmsException.asConnException(JdbcConstants.HIVE,
                     e,jdbcDatasource.getJdbcUsername(),jdbcDatasource.getDatasourceName());
         }
     }
