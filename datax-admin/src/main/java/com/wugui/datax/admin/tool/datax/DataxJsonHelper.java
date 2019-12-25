@@ -81,7 +81,7 @@ public class DataxJsonHelper implements DataxJsonInterface {
         } else if (JdbcConstants.POSTGRESQL.equals(readerDbType)) {
             readerPlugin = new PostgresqlReader();
         } else if (JdbcConstants.HIVE.equals(readerDbType)) {
-            readerPlugin = new HiveReader();
+            readerPlugin = new HdfsReader();
         }
         readerPlugin.setExtraParams(extraParams);
     }
@@ -101,7 +101,7 @@ public class DataxJsonHelper implements DataxJsonInterface {
         } else if (JdbcConstants.POSTGRESQL.equals(writerDbType)) {
             writerPlugin = new PostgresqllWriter();
         } else if (JdbcConstants.HIVE.equals(writerDbType)) {
-            writerPlugin = new HiveWriter();
+            writerPlugin = new HdfsWriter();
         }
     }
 
