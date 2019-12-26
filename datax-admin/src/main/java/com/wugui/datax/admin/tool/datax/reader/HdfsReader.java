@@ -1,5 +1,13 @@
 package com.wugui.datax.admin.tool.datax.reader;
 
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+import com.wugui.datax.admin.entity.JobJdbcDatasource;
+import com.wugui.datax.admin.tool.pojo.DataxPluginPojo;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +22,36 @@ public class HdfsReader extends BaseReaderPlugin implements DataxReaderInterface
     @Override
     public String getName() {
         return "hdfsreader";
+    }
+
+    public Map<String, Object> build(DataxPluginPojo dataxPluginPojo) {
+        //构建
+        Map<String, Object> readerObj = Maps.newLinkedHashMap();
+
+        readerObj.put("name", getName());
+//
+        Map<String, Object> parameterObj = Maps.newLinkedHashMap();
+
+        JobJdbcDatasource jobJdbcDatasource = dataxPluginPojo.getJdbcDatasource();
+
+        JSONObject extraComments = new JSONObject(jobJdbcDatasource.getComments());
+
+        parameterObj.put("path", extraComments.get("basePath") + dataxPluginPojo.getTables().get(0));
+        parameterObj.put("encoding", "UTF-8");
+
+        List<Object> jsonColumns = new ArrayList<Object>();
+        for (String temp : dataxPluginPojo.getColumns()) {
+            String name = temp.split("\\|")[0];
+            String type = temp.split("\\|")[1];
+            jsonColumns.add(JSON.parse("{\"name\": \"" + name + "\", \"type\": \"" + type + "\"}"));
+        }
+        parameterObj.put("column", jsonColumns);
+
+        parameterObj.put("fieldDelimiter", extraComments.get("fieldDelimiter"));
+
+        readerObj.put("parameter", parameterObj);
+
+        return readerObj;
     }
 
 

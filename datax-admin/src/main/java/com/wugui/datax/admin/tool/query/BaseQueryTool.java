@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -280,6 +281,41 @@ public abstract class BaseQueryTool implements QueryToolInterface {
             for (int i = 1; i <= columnCount; i++) {
                 res.add(metaData.getColumnName(i));
             }
+        } catch (SQLException e) {
+            logger.error("[getColumnNames Exception] --> "
+                    + "the exception message is:" + e.getMessage());
+        } finally {
+            JdbcUtils.close(rs);
+            JdbcUtils.close(stmt);
+        }
+        return res;
+    }
+
+    public Map<String, String> getColumnTypeAndComment(String tableName) {
+
+        Map<String, String> res = new HashMap<>();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            String querySql = "set hive.resultset.use.unique.column.names=false";
+            stmt = connection.createStatement();
+            stmt.execute(querySql);
+
+            //获取查询指定表所有字段的sql语句
+            querySql = sqlBuilder.getSQLQueryColumns(tableName);
+            logger.info("querySql: {}", querySql);
+
+            //获取所有字段
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery(querySql);
+            while (rs.next()) {
+                res.put(rs.getString(1), rs.getString(2));
+            }
+
+            querySql = "set hive.resultset.use.unique.column.names=true";
+            stmt = connection.createStatement();
+            stmt.execute(querySql);
+
         } catch (SQLException e) {
             logger.error("[getColumnNames Exception] --> "
                     + "the exception message is:" + e.getMessage());

@@ -28,7 +28,7 @@ public class QueryToolFactory {
         } else if (JdbcConstants.SQL_SERVER.equals(dbType)) {
             return getSqlserverQueryToolInstance(jobJdbcDatasource);
         } else if (JdbcConstants.HIVE.equals(dbType)) {
-            return getHiveQueryToolInstance(jobJdbcDatasource);
+            return getHdfsQueryToolInstance(jobJdbcDatasource);
         }
         throw new UnsupportedOperationException("找不到该类型: ".concat(dbType));
     }
@@ -69,9 +69,9 @@ public class QueryToolFactory {
         }
     }
 
-    private static BaseQueryTool getHiveQueryToolInstance(JobJdbcDatasource jdbcDatasource) {
+    private static BaseQueryTool getHdfsQueryToolInstance(JobJdbcDatasource jdbcDatasource) {
         try {
-            return new HiveQueryTool(jdbcDatasource);
+            return new HdfsQueryTool(jdbcDatasource);
         } catch (SQLException e) {
             throw RdbmsException.asConnException(JdbcConstants.HIVE,
                     e,jdbcDatasource.getJdbcUsername(),jdbcDatasource.getDatasourceName());

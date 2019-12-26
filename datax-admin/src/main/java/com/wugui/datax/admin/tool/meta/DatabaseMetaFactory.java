@@ -22,7 +22,7 @@ public class DatabaseMetaFactory {
         } else if (JdbcConstants.SQL_SERVER.equals(dbType)) {
             return SqlServerDatabaseMeta.getInstance();
         }  else if (JdbcConstants.HIVE.equals(dbType)) {
-            return HiveDatabaseMeta.getInstance();
+            return HdfsDatabaseMeta.getInstance();
         } else {
             throw new UnsupportedOperationException("暂不支持的类型：".concat(dbType));
         }
