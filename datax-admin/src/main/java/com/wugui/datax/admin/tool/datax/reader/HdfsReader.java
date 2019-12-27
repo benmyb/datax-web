@@ -42,10 +42,10 @@ public class HdfsReader extends BaseReaderPlugin implements DataxReaderInterface
         parameterObj.put("encoding", "UTF-8");
 
         List<Object> jsonColumns = new ArrayList<Object>();
-        for (String temp : dataxPluginPojo.getColumns()) {
-            String name = temp.split("\\|")[0];
-            String type = temp.split("\\|")[1];
-            jsonColumns.add(JSON.parse("{\"name\": \"" + name + "\", \"type\": \"" + type + "\"}"));
+        List<String> rawColumns = dataxPluginPojo.getColumns();
+        for (int i = 0; i < rawColumns.size(); ++i) {
+            String type = rawColumns.get(i).split("\\|")[1];
+            jsonColumns.add(JSON.parse("{\"index\": \"" + String.valueOf(i) + "\", \"type\": \"" + type + "\"}"));
         }
         parameterObj.put("column", jsonColumns);
 
