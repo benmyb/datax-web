@@ -36,6 +36,8 @@ public class HdfsReader extends BaseReaderPlugin implements DataxReaderInterface
 
         JSONObject extraComments = new JSONObject(jobJdbcDatasource.getComments());
 
+        parameterObj.put("defaultFS", extraComments.get("defaultFS"));
+        parameterObj.put("fileType", extraComments.get("fileType"));
         parameterObj.put("path", extraComments.get("basePath") + dataxPluginPojo.getTables().get(0));
         parameterObj.put("encoding", "UTF-8");
 
